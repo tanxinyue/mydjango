@@ -256,11 +256,11 @@
                             <div class="card-body">
                                 <h5 class="card-title m-b-0">Static Table</h5>
                             </div>
-                            <form action="/post_user/" method="post">
+                            <form action="/post_use/" method="post">
                                 {% csrf_token %}
-                                <p><input type="text" name="username"></p>
+                                <p><input type="text" name="username" value="{{ name }}"></p>
                                 <p><input type="password" name="password"></p>
-                                <p><input type="submit" value="提交"></p>
+                                <p><input type="submit" value="修改"></p>
 
 
 

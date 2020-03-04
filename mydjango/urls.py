@@ -14,13 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,re_path
+from django.urls import path,re_path,include
 from django.views.static import serve
-from myapp.views import myindex
+from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_delete,update_post
 
 urlpatterns = [
     #定义超链接路由
     re_path('^static/upload/(?P<path>.*)$',serve,{'document_root':'/static/upload/'}),
-    path('',myindex),
-    path('',Hello),
+    path('index/',Myview.as_view()),
+    path('adduser/',Adduser.as_view()),
+    path('post_user/',search_post),
+    path('post_use/',update_post),
+
+    re_path(r'^list_modify/(?P<i_id>\w+)/$',list_modify,name='list_modify'),
+    re_path(r'^list_delete/(?P<i_id>\w+)/$',list_delete,name='list_delete'),
+
+
 ]

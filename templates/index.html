@@ -259,31 +259,32 @@
                             <table class="table">
                                   <thead>
                                     <tr>
+
                                       <th scope="col">#</th>
-                                      <th scope="col">First</th>
-                                      <th scope="col">Last</th>
-                                      <th scope="col">Handle</th>
+                                      <th scope="col">用户名</th>
+                                      <th scope="col">密码</th>
+                                      <th scope="col">创建时间</th>
+                                      <th scope="col">操作</th>
+                                       <th scope="col"><a href="/adduser/">新用户注册</a></th>
                                     </tr>
                                   </thead>
                                   <tbody>
+                                  {% for item in list %}
                                     <tr>
                                       <th scope="row">1</th>
-                                      <td>Mark</td>
-                                      <td>Otto</td>
-                                      <td>@mdo</td>
+                                      <td>{{ item.name }}</td>
+                                      <td>{{ item.password }}</td>
+                                      <td>{{ item.time }}</td>
+
+                                   <td>
+                                       <a href="{% url 'list_delete' item.name %}">修改|</a>
+                                        <a href="{% url 'list_modify' item.name %}">删除</a>
+                                   </td>
+
                                     </tr>
-                                    <tr>
-                                      <th scope="row">2</th>
-                                      <td>Jacob</td>
-                                      <td>Thornton</td>
-                                      <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                      <th scope="row">3</th>
-                                      <td>Larry</td>
-                                      <td>the Bird</td>
-                                      <td>@twitter</td>
-                                    </tr>
+                                  {% endfor %}
+
+
                                   </tbody>
                             </table>
                         </div>

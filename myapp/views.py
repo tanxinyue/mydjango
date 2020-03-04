@@ -4,6 +4,7 @@ from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 #导入类视图
 from django.views import View
 
+from .models import *
 #from myapp.models import User
 import json
 from django.core.serializers import serialize
@@ -55,8 +56,53 @@ def myindex(request):
 
     return HttpResponse('这里是首页')
 
-#HELLO视图
-def Hello(request):
+class Adduser(View):
+    def get(self,request):
 
-    return HttpResponse('helloworld')
+        return render(request,'test.html')
 
+class Myview(View):
+
+    def get(self,request):
+        list=[]
+        user=User.objects.all()
+        for i in user:
+            list.append({
+                'name':i.username,
+                'password':i.password,
+                'time':i.create_time
+            })
+        return render(request,'index.html',locals())
+
+
+def search_post(request):
+
+        user = request.POST.get('username')
+        password = request.POST.get('password')
+        print(user, password)
+        User.objects.create(username=user,password=password)
+        return HttpResponse('添加成功')
+
+
+
+def list_modify(request,i_id):
+    print(i_id)
+    User.objects.filter(username=i_id).delete()
+    return HttpResponse('删除成功')
+
+
+
+
+
+def list_delete(request,i_id):
+    print(i_id)
+    name=i_id
+
+    return render(request,'update.html',locals())
+
+def update_post(request):
+    user = request.POST.get('username')
+    password = request.POST.get('password')
+    print(user, password)
+    User.objects.filter(username=user,password=password)
+    return HttpResponse('修改成功')
