@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,re_path,include
 from django.views.static import serve
-from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_delete,update_post
+from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_delete,update_post,Register
 
 urlpatterns = [
     #定义超链接路由
@@ -25,6 +25,7 @@ urlpatterns = [
     path('adduser/',Adduser.as_view()),
     path('post_user/',search_post),
     path('post_use/',update_post),
+    path('register/',Register.as_view()),
 
     re_path(r'^list_modify/(?P<i_id>\w+)/$',list_modify,name='list_modify'),
     re_path(r'^list_delete/(?P<i_id>\w+)/$',list_delete,name='list_delete'),

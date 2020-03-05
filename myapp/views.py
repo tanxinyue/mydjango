@@ -104,5 +104,39 @@ def update_post(request):
     user = request.POST.get('username')
     password = request.POST.get('password')
     print(user, password)
-    User.objects.filter(username=user,password=password)
+    User.objects.filter(username=user).update(password=password)
     return HttpResponse('修改成功')
+def make_password(mypass):
+    # 生成md5对象
+    md5=hashlib.md5()
+    #  定义随机对象
+    sign_str=str(mypass)
+    # 转码
+    sign_utf8=sign_str.encode(encoding='utf-8')
+    #  加密
+    md5.update(sign_utf8)
+    # 生成秘钥字符串
+    md5_server=md5.hexdigest()
+
+    return md5_server
+
+
+class Register(View):
+    def post(self,request):
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        print(username,password)
+        user=User.objects.filter(username=username).first()
+        if user:
+            res={}
+            res['code']=405
+            res['message']='该用户名已存在'
+            return HttpResponse(json.dumps(res))
+        else:
+            user=User(username=username,password=password)
+            user.save()
+            res = {}
+            res['code'] = 200
+            res['message'] = '注册成功'
+            return HttpResponse(json.dumps(res))
+
