@@ -50,6 +50,69 @@ from django.db.models import Q,F
 #导入dwebsocket的库
 from dwebsocket.decorators import accept_websocket
 import uuid
+#  导包
+import redis
+#  定义ip地址和端口
+host='127.0.0.1'
+port=6379
+
+#简历redis对象
+
+r=redis.Redis(host=host,port=port)
+
+#定义验证码的类
+class MyCode(View):
+    #定义随机颜色
+    def get_random_color(self):
+        R=random.randrange(255)
+        G=random.randrange(255)
+        B=random.randrange(255)
+        return (R,G,B)
+    #获取验证码视图
+    def get(self,request):
+        #画布
+        img_size=(120,50)
+        #定义画图对象
+        image=Image.new('RGB',img_size,'white')
+        #定义画笔对象
+        draw=ImageDraw.Draw(image,'RGB')
+        #定义随机字符串
+        num='0123456789'
+        #容器
+        code_str=''
+        #定义字体
+        font_size=ImageFont.truetype(font='C:\\Windows\\Fonts\\Arial.ttf',size=15)
+        for i in range(4):
+            #  获取随机颜色
+            text_color=self.get_random_color()
+            #获取随机字符串长度
+            ran_num=random.randrange(len(num))
+            #获取字符集
+            random_str=num[ran_num]
+            #添加到容器中
+            code_str+=random_str
+            #将字符串添加到画布上
+            draw.text((10+30*i,20),random_str,text_color,font=font_size)
+        #简历缓存区
+        buf=io.BytesIO()
+        #将验证码保存到redis中
+        r.set('code',code_str)
+        #保存图片
+        image.save(buf,'png')
+        return HttpResponse(buf.getvalue(),'image/png')
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #方法视图
 def myindex(request):
@@ -125,7 +188,20 @@ class Register(View):
     def post(self,request):
         username=request.POST.get('username')
         password=request.POST.get('password')
-        print(username,password)
+        code=request.POST.get('code')
+        print(username,password,code)
+        redis_code=r.get('code')
+        redis_code=redis_code.decode('utf-8')
+        print(redis_code)
+        if code!=redis_code:
+            res = {}
+            res['code'] = 405
+            res['message'] = '验证码输入错误，请重新输入'
+            return HttpResponse(json.dumps(res))
+
+
+
+
         user=User.objects.filter(username=username).first()
         if user:
             res={}
