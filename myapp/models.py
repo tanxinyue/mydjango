@@ -1,7 +1,8 @@
 from django.db import models
 from datetime import datetime
+from django.utils import timezone
 class Base(models.Model):
-    create_time=models.DateTimeField(default=datetime.now(),null=True)
+    create_time=models.DateTimeField(default=timezone.now,null=True)
     class Meta:
         abstract=True
 

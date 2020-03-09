@@ -97,6 +97,7 @@ class MyCode(View):
         buf=io.BytesIO()
         #将验证码保存到redis中
         r.set('code',code_str)
+        request.session['code']=code_str
         #保存图片
         image.save(buf,'png')
         return HttpResponse(buf.getvalue(),'image/png')
@@ -192,6 +193,8 @@ class Register(View):
         print(username,password,code)
         redis_code=r.get('code')
         redis_code=redis_code.decode('utf-8')
+        s_code=request.session.get('code')
+        print('session',s_code)
         print(redis_code)
         if code!=redis_code:
             res = {}
@@ -215,4 +218,25 @@ class Register(View):
             res['code'] = 200
             res['message'] = '注册成功'
             return HttpResponse(json.dumps(res))
+
+
+class  Login(View):
+    def post(self,request):
+        username=request.POST.get('username','null')
+        password=request.POST.get('password','null')
+        print(username,password)
+        user=User.objects.filter(username=username,password=password).first()
+        if user:
+            res = {}
+            res['code'] = 200
+            res['message'] = '登录成功'
+            res['username'] = user.username
+            res['uid'] = user.id
+            return HttpResponse(json.dumps(res))
+        else:
+            res = {}
+            res['code'] = 405
+            res['message'] = '用户名密码错误'
+            return HttpResponse(json.dumps(res))
+
 
