@@ -240,3 +240,39 @@ class  Login(View):
             return HttpResponse(json.dumps(res))
 
 
+# def wb_back(request):
+#     code=request.GET.get('code')
+#     access_token_url='https://api.weibo.com/oauth2/access_token'
+#     res=requests.post(access_token_url,data={'client_id':'1990796315','client_secret':'4f3357bc1f3c89a000fd452c2702aa3e','grant_type':'authorization_code','code':code,'redirect_uri':'http://127.0.0.1:8000/my_weibo'})
+#
+#     print(res)
+#     res=json.loads(res.text)
+#     print(res)
+#
+#
+#     return HttpResponse('授权成功')
+
+
+
+class wb_back(View):
+    def post(self,request):
+        code = request.POST.get('code')
+        print(code)
+        params = {
+            'client_id': '2144764739',
+            'client_secret': 'e72238ce0f2e5792ecc14badc0367fe6',
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': 'http://127.0.0.1:8080/my_weibo',
+
+        }
+        access_token_url='https://api.weibo.com/oauth2/access_token'
+        res=requests.post(url=access_token_url,data=params)
+        print(res.text)
+        res1 = json.loads(res.text)
+
+
+        return HttpResponse(json.dumps({'uid':res1['uid']}))
+
+
+
