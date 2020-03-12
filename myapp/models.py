@@ -11,3 +11,5 @@ class User(Base):
     password=models.CharField(max_length=120,verbose_name='密码')
     class Meta:
         db_table='user'
+
+

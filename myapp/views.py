@@ -270,9 +270,87 @@ class wb_back(View):
         res=requests.post(url=access_token_url,data=params)
         print(res.text)
         res1 = json.loads(res.text)
+        result=requests.get('https://api.weibo.com/2/users/show.json',params={'access_token':res1['access_token'],'uid':res1['uid']})
+        res2=json.loads(result.text)
+        print(res2['name'])
+        #判断该用户是否曾经登录过
+        user=User.objects.filter(username=str(res2['name'])).first()
+        sina_id=''
+        user_id=''
+        if user:
+            sina_id=user.username
+            user_id=user.id
+        else:
+            #手动创建账号
+            user=User(username=str(res2['name']),password='')
+            user.save()
+            sina_id=res2['name']
+            #查询刚才入库的新账号id
+            user=User.objects.filter(username=str(res2['name'])).first()
+            user_id=user.id
 
 
-        return HttpResponse(json.dumps({'uid':res1['uid']}))
 
 
 
+
+
+        return HttpResponse(json.dumps({'username':sina_id,'uid':user_id}))
+
+        # return redirect("http://127.0.0.1:8080?sina_id=" + sina_id + "&uid=" + str(user_id))
+
+
+
+
+#构造钉钉登录url
+def ding_url(request):
+    appid = 'dingoa5ckwctqpp3eiuw4e'
+    redirect_uri = 'http://127.0.0.1:8000/dingding_back'
+
+    return redirect('https://oapi.dingtalk.com/connect/qrconnect?appid='+appid+'&response_type=code&scope=snsapi_login&state=STATE&redirect_uri='+redirect_uri)
+
+
+import time
+import hmac
+import base64
+from hashlib import sha256
+import urllib
+import json
+
+#构造钉钉回调方法
+def ding_back(request):
+
+    #获取code
+    code = request.GET.get("code")
+
+    t = time.time()
+    #时间戳
+    timestamp = str((int(round(t * 1000))))
+    appSecret ='0R8zFyX2GHEwf-nEkbmDkhpv-3jfUHDgTFzOeaLd7yDIHSDjOAnMJGAFQfDBK3Ry'
+    #构造签名
+    signature = base64.b64encode(hmac.new(appSecret.encode('utf-8'),timestamp.encode('utf-8'), digestmod=sha256).digest())
+    #请求接口，换取钉钉用户名
+    payload = {'tmp_auth_code':code}
+    headers = {'Content-Type': 'application/json'}
+    res = requests.post('https://oapi.dingtalk.com/sns/getuserinfo_bycode?signature='+urllib.parse.quote(signature.decode("utf-8"))+"&timestamp="+timestamp+"&accessKey=dingoa5ckwctqpp3eiuw4e",data=json.dumps(payload),headers=headers)
+
+    res_dict = json.loads(res.text)
+    print(res_dict)
+    print(res_dict['user_info']['nick'])
+    d_username=res_dict['user_info']['nick']
+    user = User.objects.filter(username=d_username).first()
+    ding_id = ''
+    user_id = ''
+    if user:
+       ding_id = user.username
+       user_id = user.id
+    else:
+        # 手动创建账号
+        user = User(username=d_username, password='')
+        user.save()
+        ding_id = d_username
+        # 查询刚才入库的新账号id
+        user = User.objects.filter(username=d_username).first()
+        user_id = user.id
+
+    return redirect("http://127.0.0.1:8080?ding_id=" + ding_id + "&uid=" + str(user_id))

@@ -8,7 +8,7 @@ import base64
 browser=webdriver.Chrome('./chromedriver.exe')
 
 
-browser.get('http://localhost:8080/register')
+browser.get('http://127.0.0.1:8080/register')
 
 
 time.sleep(3)
