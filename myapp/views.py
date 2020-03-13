@@ -341,6 +341,7 @@ def ding_back(request):
     user = User.objects.filter(username=d_username).first()
     ding_id = ''
     user_id = ''
+    #判断是否存在
     if user:
        ding_id = user.username
        user_id = user.id
@@ -353,4 +354,4 @@ def ding_back(request):
         user = User.objects.filter(username=d_username).first()
         user_id = user.id
 
-    return redirect("http://127.0.0.1:8080?ding_id=" + ding_id + "&uid=" + str(user_id))
+    return redirect("http://127.0.0.1:8080/finish?ding_id=" + ding_id + "&uid=" + str(user_id))
