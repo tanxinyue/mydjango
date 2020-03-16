@@ -18,7 +18,7 @@ from django.urls import path,re_path,include
 from django.views.static import serve
 from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_delete,update_post,\
     Register,MyCode,Login,wb_back,ding_url,ding_back
-from myapp.md_user import UploadFile,Update
+from myapp.md_user import UploadFile,Update,Qiniu
 from myapp.kaoshi import Register,Login
 urlpatterns = [
     #定义超链接路由
@@ -37,6 +37,7 @@ urlpatterns = [
     path('kaoshi_register/',Register.as_view()),
     path('kaoshi_login/',Login.as_view()),
     path('update/',Update.as_view()),
+    path('uptoken/',Qiniu.as_view()),
 
 
     re_path(r'^list_modify/(?P<i_id>\w+)/$',list_modify,name='list_modify'),

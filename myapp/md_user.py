@@ -106,3 +106,18 @@ class Update(View):
         User.objects.filter(username=username).update(password=password)
 
         return HttpResponse(json.dumps({'code':200}))
+
+
+
+#定义七牛云存储接口
+from qiniu import Auth
+class Qiniu(APIView):
+    def get(self,request):
+        #定义秘钥
+        q=Auth('p1YCAtlMQydBxWfKF45Wuf_Cqb41JTeJFIAGW2S9','chE4ioNSPRy7VFzV33okYbb4kDyqu-OXqbW6Xqoj')
+        #指定上传空间
+        token=q.upload_token('atmyfileupload')
+        print(token)
+        res={}
+        res['token']=token
+        return Response(res)
