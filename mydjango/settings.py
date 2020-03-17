@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'myapp',
-    'dwebsocket'
+    'dwebsocket',
+    'rest_framework.authtoken',  # 设置token
 ]
 
 MIDDLEWARE = [

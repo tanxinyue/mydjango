@@ -107,7 +107,16 @@ class Update(View):
 
         return HttpResponse(json.dumps({'code':200}))
 
-
+#更新用户数据
+class Updateuser(APIView):
+    def get(self,request):
+        img=request.GET.get('img')
+        uid=request.GET.get('uid')
+        #查询数据
+        user=User.objects.get(id=int(uid))
+        user.img=img
+        user.save()
+        return Response({'code':200,'message':'更新成功'})
 
 #定义七牛云存储接口
 from qiniu import Auth
@@ -121,3 +130,15 @@ class Qiniu(APIView):
         res={}
         res['token']=token
         return Response(res)
+
+
+from myapp.myser import UserSerializer
+#用户信息类
+class Userinfo(APIView):
+    def get(self,request):
+        uid=request.GET.get('uid')
+        #查询数据
+        user=User.objects.get(id=int(uid))
+        #序列化对象
+        user_ser=UserSerializer(user)
+        return Response(user_ser.data)
