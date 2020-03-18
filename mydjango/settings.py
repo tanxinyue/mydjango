@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #加载自定义中间件   文件夹名.文件名.类名
-    #'myapp.views.MyMiddleware'
+    # 'myapp.md_user.MyMiddleWare'
 ]
 
 ROOT_URLCONF = 'mydjango.urls'

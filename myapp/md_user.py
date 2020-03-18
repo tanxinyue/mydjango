@@ -34,7 +34,7 @@ import os
 from django.db import connection
 
 import jwt
-
+#
 #导入redis数据库
 import redis
 
@@ -131,10 +131,27 @@ class Qiniu(APIView):
         res['token']=token
         return Response(res)
 
-
+from django.utils.decorators import method_decorator
 from myapp.myser import UserSerializer
+
+#装饰器的使用
+
+def my_decorator(func):
+    def wrapper(request,*args,**kwargs):
+        print('这个装饰器被调用了')
+        print('请求接口，地址是:%s' % request.path)
+        uid = request.GET.get('uid')
+        jwt1 = request.GET.get('jwt',None)
+        decode_jwt = jwt.decode(jwt1, '123', algorithms=['HS256'])
+        if decode_jwt['uid'] != str(uid):
+            return HttpResponse('你篡改了用户的id')
+
+        return func(request,*args,**kwargs)
+    return wrapper
+
 #用户信息类
 class Userinfo(APIView):
+    @method_decorator(my_decorator)
     def get(self,request):
         uid=request.GET.get('uid')
         #查询数据
@@ -142,3 +159,34 @@ class Userinfo(APIView):
         #序列化对象
         user_ser=UserSerializer(user)
         return Response(user_ser.data)
+
+
+
+
+from django.utils.deprecation import MiddlewareMixin
+#自定义中间件类
+
+class MyMiddleWare(MiddlewareMixin):
+    def process_request(self,request):
+        # uid=request.GET.get('uid')
+        # jwt1=request.GET.get('jwt')
+        # if jwt1==None:
+        #     return HttpResponse('你没有戴上令牌')
+        # decode_jwt = jwt.decode(jwt1, '123', algorithms=['HS256'])
+        # if decode_jwt['uid']!=str(uid):
+        #     return HttpResponse('你篡改了用户的id')
+
+
+        pass
+
+    #模板渲染之前
+    def process_view(self,request,view_func,view_args,view_kwargs):
+        pass
+
+
+    #请求之后
+
+    def process_response(self,request,response):
+        return response
+
+

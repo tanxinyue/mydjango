@@ -228,10 +228,15 @@ class  Login(View):
         user=User.objects.filter(username=username,password=password).first()
         if user:
             res = {}
+            encode_jwt = jwt.encode({'uid': str(user.id)}, '123', algorithm='HS256')
+            encode_str = str(encode_jwt, 'utf-8')
+            res['jwtpass'] = encode_str
             res['code'] = 200
             res['message'] = '登录成功'
             res['username'] = user.username
             res['uid'] = user.id
+            #加入jwt令牌机制
+
             return HttpResponse(json.dumps(res))
         else:
             res = {}

@@ -19,7 +19,7 @@ from django.views.static import serve
 from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_delete,update_post,\
     Register,MyCode,Login,wb_back,ding_url,ding_back
 from myapp.md_user import UploadFile,Update,Qiniu,Updateuser,Userinfo
-from myapp.kaoshi import Register,Login
+
 urlpatterns = [
     #定义超链接路由
     re_path('^static/upload/(?P<path>.*)$',serve,{'document_root':'/static/upload/'}),
@@ -34,8 +34,7 @@ urlpatterns = [
     path('ding_url/',ding_url),
     path('dingding_back/',ding_back),
     path('uploadfile/',UploadFile.as_view()),
-    path('kaoshi_register/',Register.as_view()),
-    path('kaoshi_login/',Login.as_view()),
+
     path('update/',Update.as_view()),
     path('uptoken/',Qiniu.as_view()),
     path('updateuser/',Updateuser.as_view()),
