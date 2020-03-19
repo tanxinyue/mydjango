@@ -19,7 +19,7 @@ from django.views.static import serve
 from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_delete,update_post,\
     Register,MyCode,Login,wb_back,ding_url,ding_back
 from myapp.md_user import UploadFile,Update,Qiniu,Updateuser,Userinfo
-
+from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
 urlpatterns = [
     #定义超链接路由
     re_path('^static/upload/(?P<path>.*)$',serve,{'document_root':'/static/upload/'}),
@@ -34,11 +34,14 @@ urlpatterns = [
     path('ding_url/',ding_url),
     path('dingding_back/',ding_back),
     path('uploadfile/',UploadFile.as_view()),
-
     path('update/',Update.as_view()),
     path('uptoken/',Qiniu.as_view()),
     path('updateuser/',Updateuser.as_view()),
     path('userinfo/',Userinfo.as_view()),
+    path('pics/',InsertPics.as_view()),
+    path('showpics/',Showpics.as_view()),
+    path('dpics/',DeletePics.as_view()),
+    path('upics/',UpdatePics.as_view()),
 
 
     re_path(r'^list_modify/(?P<i_id>\w+)/$',list_modify,name='list_modify'),

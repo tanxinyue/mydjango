@@ -7,3 +7,8 @@ class UserSerializer(serializers.ModelSerializer):
         model=User
         fields = "__all__"
 
+class PicsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Pics
+        fields = "__all__"
+

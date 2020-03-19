@@ -16,4 +16,14 @@ class User(Base):
     class Meta:
         db_table='user'
 
+#幻灯片
+class Pics(Base):
+    #名称
+    title=models.CharField(max_length=200)
+    #链接
+    link=models.CharField(max_length=200)
+    #图片
+    img=models.CharField(max_length=200)
+    class Meta:
+        db_table='pics'
 
