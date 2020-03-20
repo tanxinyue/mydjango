@@ -62,6 +62,7 @@ port=6379
 r=redis.Redis(host=host,port=port)
 
 
+
 class InsertPics(APIView):
     def post(self,request):
         img = request.FILES.get('file')

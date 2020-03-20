@@ -12,3 +12,8 @@ class PicsSerializer(serializers.ModelSerializer):
         model=Pics
         fields = "__all__"
 
+class GoodsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Goods
+        fields = "__all__"
+
