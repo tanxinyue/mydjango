@@ -20,8 +20,9 @@ from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_dele
     Register,MyCode,Login,wb_back,ding_url,ding_back
 from myapp.md_user import UploadFile,Update,Qiniu,Updateuser,Userinfo
 from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
-from myapp.md_goods import Goods
+from myapp.md_goods import InsertGoods
 from myapp.kaoshi02 import Qiniukaoshi,Updateuser,Userinfokaoshi,Movieinfo
+
 urlpatterns = [
     #定义超链接路由
     re_path('^static/upload/(?P<path>.*)$',serve,{'document_root':'/static/upload/'}),
@@ -44,10 +45,11 @@ urlpatterns = [
     path('showpics/',Showpics.as_view()),
     path('dpics/',DeletePics.as_view()),
     path('upics/',UpdatePics.as_view()),
-    path('insertgoods/',Goods.as_view()),
+    path('insertgoods/',InsertGoods.as_view()),
     path('kstoken/',Qiniukaoshi.as_view()),
     path('ksuserinfo/',Userinfokaoshi.as_view()),
     path('ksup/',Movieinfo.as_view()),
+
 
 
     re_path(r'^list_modify/(?P<i_id>\w+)/$',list_modify,name='list_modify'),

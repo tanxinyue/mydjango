@@ -64,19 +64,32 @@ from mydjango.settings import UPLOAD_ROOT
 from myapp.myser import GoodsSerializer
 
 
-class Goods(APIView):
+class InsertGoods(APIView):
     def post(self,request):
-        name = request.FILES.get('name')
+        name = request.POST.get('name','null')
+        desc = request.POST.get('desc','null')
+        color = request.POST.get('color','null')
+        size = request.POST.get('size','null')
+        price = request.POST.get('price','null')
+        cate_id = request.POST.get('cate_id','null')
+        print(name, desc, price, cate_id, color,size)
+        parms=dict()
+        parms['color']=color
+        parms['size']=size
+        print(json.dumps(parms))
+
         goods=Goods.objects.filter(name=name).first()
+
         if goods:
             res={}
             res['code']=405
             res['message']='该商品已经存在'
             return  Response(res)
         else:
-            goods=Goods()
+            goods=Goods(name=name,desc=desc,cate_id=cate_id,price=price,parms=json.dumps(parms))
             goods.save()
             res = {}
             res['code'] = 200
             res['message'] = '添加成功'
+            r.set('parms', json.dumps(parms))
             return Response(res)
