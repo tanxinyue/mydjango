@@ -4,6 +4,7 @@ from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 #导入类视图
 from django.views import View
 
+from mydjango import settings
 from .models import *
 #from myapp.models import User
 import json
@@ -68,15 +69,13 @@ class InsertGoods(APIView):
     def post(self,request):
         name = request.POST.get('name','null')
         desc = request.POST.get('desc','null')
-        color = request.POST.get('color','null')
-        size = request.POST.get('size','null')
+        parms = request.POST.get('parms','null')
         price = request.POST.get('price','null')
         cate_id = request.POST.get('cate_id','null')
-        print(name, desc, price, cate_id, color,size)
-        parms=dict()
-        parms['color']=color
-        parms['size']=size
-        print(json.dumps(parms))
+        image = request.FILES.get('img')
+        video = request.FILES.get('video')
+        print(name, desc, price, cate_id,parms,image,video)
+
 
         goods=Goods.objects.filter(name=name).first()
 
@@ -86,10 +85,39 @@ class InsertGoods(APIView):
             res['message']='该商品已经存在'
             return  Response(res)
         else:
-            goods=Goods(name=name,desc=desc,cate_id=cate_id,price=price,parms=json.dumps(parms))
+            goods=Goods(name=name,desc=desc,cate_id=cate_id,price=price,parms=parms,img=image,video=video)
             goods.save()
+            f = open(os.path.join(settings.UPLOAD_ROOT, image.name), 'wb')
+            for i in image.chunks():
+                f.write(i)
+            f.close()
             res = {}
             res['code'] = 200
             res['message'] = '添加成功'
             r.set('parms', json.dumps(parms))
             return Response(res)
+
+# 商品列表页
+class GoodsList(APIView):
+    def get(self,request):
+        #当前页
+        page=int(request.GET.get('page',1))
+        # 一页有多少条商品
+        size=int(request.GET.get('size',1))
+        #定义从哪开始切换
+        data_start=(page-1)*size
+        # 定义切到哪里
+        data_end=page*size
+        #查询数据
+        goodslist=Goods.objects.all()[data_start:data_end]
+        #查询总数量
+        count=Goods.objects.count()
+        #序列化操作
+        goods_ser=GoodsSerializer(goodslist,many=True)
+        # 返回数据
+        res={}
+        res['total']=count
+        res['data']=goods_ser.data
+        return Response(res)
+
+

@@ -235,6 +235,7 @@ class  Login(View):
             res['message'] = '登录成功'
             res['username'] = user.username
             res['uid'] = user.id
+            res['type']=user.type
             #加入jwt令牌机制
 
             return HttpResponse(json.dumps(res))

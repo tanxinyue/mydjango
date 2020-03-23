@@ -20,7 +20,7 @@ from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_dele
     Register,MyCode,Login,wb_back,ding_url,ding_back
 from myapp.md_user import UploadFile,Update,Qiniu,Updateuser,Userinfo
 from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
-from myapp.md_goods import InsertGoods
+from myapp.md_goods import InsertGoods,GoodsList
 from myapp.kaoshi02 import Qiniukaoshi,Updateuser,Userinfokaoshi,Movieinfo
 
 urlpatterns = [
@@ -46,6 +46,7 @@ urlpatterns = [
     path('dpics/',DeletePics.as_view()),
     path('upics/',UpdatePics.as_view()),
     path('insertgoods/',InsertGoods.as_view()),
+    path('goodslist/',GoodsList.as_view()),
     path('kstoken/',Qiniukaoshi.as_view()),
     path('ksuserinfo/',Userinfokaoshi.as_view()),
     path('ksup/',Movieinfo.as_view()),
