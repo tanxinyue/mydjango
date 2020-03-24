@@ -106,13 +106,13 @@ class InsertGoods(APIView):
             p = db['persons']
             person = {
           
-                 'name':name,
+                  'name':name,
                   'desc':desc,
-	  'price':price,
+	          'price':price,
                   'parms':parms,
-	  'img':image,
+	          'img':image,
                   'video':video,
-	  'cate_id':cate_id,
+	          'cate_id':cate_id,
              }
             result = p.insert(person)
             print(result)
