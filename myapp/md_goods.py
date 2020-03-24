@@ -51,6 +51,8 @@ from django.db.models import Q,F
 #导入dwebsocket的库
 from dwebsocket.decorators import accept_websocket
 import uuid
+import pymongo #导包
+client = pymongo.MongoClient(host='127.0.0.1',port=27017) #链接mongodb
 #  导包
 import redis
 #  定义ip地址和端口
@@ -69,7 +71,7 @@ class InsertGoods(APIView):
     def post(self,request):
         name = request.POST.get('name','null')
         desc = request.POST.get('desc','null')
-<<<<<<< HEAD
+
         parms = request.POST.get('parms','null')
         price = request.POST.get('price','null')
         cate_id = request.POST.get('cate_id','null')
@@ -77,7 +79,7 @@ class InsertGoods(APIView):
         video = request.FILES.get('video')
         print(name, desc, price, cate_id,parms,image,video)
 
-=======
+
         color = request.POST.get('color','null')
         size = request.POST.get('size','null')
         price = request.POST.get('price','null')
@@ -87,7 +89,7 @@ class InsertGoods(APIView):
         parms['color']=color
         parms['size']=size
         print(json.dumps(parms))
->>>>>>> 2a52acabbcd8b7f0cb50cc8d3a14b35d2fc50bf6
+
 
         goods=Goods.objects.filter(name=name).first()
 
@@ -97,12 +99,29 @@ class InsertGoods(APIView):
             res['message']='该商品已经存在'
             return  Response(res)
         else:
-<<<<<<< HEAD
+
             goods=Goods(name=name,desc=desc,cate_id=cate_id,price=price,parms=parms,img=image,video=video)
-=======
-            goods=Goods(name=name,desc=desc,cate_id=cate_id,price=price,parms=json.dumps(parms))
->>>>>>> 2a52acabbcd8b7f0cb50cc8d3a14b35d2fc50bf6
             goods.save()
+            db = client['goods']
+            p = db['persons']
+            person = {
+          
+                 'name':name,
+                  'desc':desc,
+	  'price':price,
+                  'parms':parms,
+	  'img':image,
+                  'video':video,
+	  'cate_id':cate_id,
+             }
+            result = p.insert(person)
+            print(result)
+            
+
+
+            
+
+           
             f = open(os.path.join(settings.UPLOAD_ROOT, image.name), 'wb')
             for i in image.chunks():
                 f.write(i)
@@ -135,5 +154,16 @@ class GoodsList(APIView):
         res['total']=count
         res['data']=goods_ser.data
         return Response(res)
+
+
+
+# 商品信息接口
+class GoodInfo(APIView):
+    def get(self,request):
+        id = int(request.GET.get('id'))
+        print(id)
+        good = Goods.objects.get(pk=id)
+        goods_ser = GoodsSerializer(good)
+        return Response(goods_ser.data)
 
 

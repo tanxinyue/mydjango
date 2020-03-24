@@ -20,11 +20,11 @@ from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_dele
     Register,MyCode,Login,wb_back,ding_url,ding_back
 from myapp.md_user import UploadFile,Update,Qiniu,Updateuser,Userinfo
 from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
-<<<<<<< HEAD
-from myapp.md_goods import InsertGoods,GoodsList
-=======
-from myapp.md_goods import InsertGoods
->>>>>>> 2a52acabbcd8b7f0cb50cc8d3a14b35d2fc50bf6
+
+from myapp.md_goods import GoodsList
+
+from myapp.md_goods import InsertGoods,GoodInfo
+
 from myapp.kaoshi02 import Qiniukaoshi,Updateuser,Userinfokaoshi,Movieinfo
 
 urlpatterns = [
@@ -50,10 +50,11 @@ urlpatterns = [
     path('dpics/',DeletePics.as_view()),
     path('upics/',UpdatePics.as_view()),
     path('insertgoods/',InsertGoods.as_view()),
-<<<<<<< HEAD
+    path('goodinfo/',GoodInfo.as_view()),
+
     path('goodslist/',GoodsList.as_view()),
-=======
->>>>>>> 2a52acabbcd8b7f0cb50cc8d3a14b35d2fc50bf6
+
+
     path('kstoken/',Qiniukaoshi.as_view()),
     path('ksuserinfo/',Userinfokaoshi.as_view()),
     path('ksup/',Movieinfo.as_view()),
