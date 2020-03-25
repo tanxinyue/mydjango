@@ -63,8 +63,42 @@ port=6379
 
 r=redis.Redis(host=host,port=port)
 from mydjango.settings import UPLOAD_ROOT
-
+from bson import json_util as bjson
 from myapp.myser import GoodsSerializer
+
+#获取商品标签
+class GetTags(View):
+    def get(self,request):
+        id = request.GET.get('id', None)
+        # 建立数据库对象
+        db = client.md
+        # 建立表对象
+        table = db.mytag
+        #查询数据
+        res=table.find_one({"gid":str(id)})
+        return HttpResponse(json.dumps(res,ensure_ascii=False))
+
+
+class InsertTags(APIView):
+    def get(self,request):
+        id = request.GET.get('id', None)
+        tags = request.GET.get('tags', None)
+        tag=tags.split(",")
+        r.set("good_id",id)
+        r.set('tags',str(tag))
+        #建立数据库对象
+        db=client.md
+        #建立表对象
+        table=db.mytag
+        #排重操作
+        res=table.find({'gid':str(id)}).count()
+        print(res)
+        if res>0:
+            return Response({'message':'重复数据'})
+        else:
+            #入库操作
+            table.insert({"gid":str(id),"tags":tag})
+            return Response({'message':'入库成功'})
 
 
 class InsertGoods(APIView):
@@ -105,14 +139,14 @@ class InsertGoods(APIView):
             db = client['goods']
             p = db['persons']
             person = {
-          
+
                  'name':name,
                   'desc':desc,
-	  'price':price,
+	              'price':price,
                   'parms':parms,
-	  'img':image,
+	              'img':image,
                   'video':video,
-	  'cate_id':cate_id,
+	              'cate_id':cate_id,
              }
             result = p.insert(person)
             print(result)
