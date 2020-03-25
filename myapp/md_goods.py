@@ -139,6 +139,7 @@ class InsertGoods(APIView):
             db = client['goods']
             p = db['persons']
             person = {
+<<<<<<< HEAD
 
                  'name':name,
                   'desc':desc,
@@ -147,6 +148,16 @@ class InsertGoods(APIView):
 	              'img':image,
                   'video':video,
 	              'cate_id':cate_id,
+=======
+          
+                  'name':name,
+                  'desc':desc,
+	          'price':price,
+                  'parms':parms,
+	          'img':image,
+                  'video':video,
+	          'cate_id':cate_id,
+>>>>>>> da254ab0831f6dcae6ea663e5861a7c51741798b
              }
             result = p.insert(person)
             print(result)
