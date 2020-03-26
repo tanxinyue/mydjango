@@ -65,6 +65,42 @@ r=redis.Redis(host=host,port=port)
 from mydjango.settings import UPLOAD_ROOT
 from bson import json_util as bjson
 from myapp.myser import GoodsSerializer
+class Updatetags(APIView):
+    def get(self,request):
+        id = request.GET.get('id', None)
+        tags = request.GET.get('tags', None)
+        tag = tags.split(",")
+        # 建立数据库对象
+        db = client.md
+        # 建立表对象
+        table = db.mytag
+        # 排重操作
+        table.update_one({'gid': str(id)},{'$set':{'tags':tag}})
+        res = {}
+        res['code'] = 200
+        res['message'] = '标签修改成功'
+        return Response(res)
+
+
+
+
+class updateGoods(APIView):
+    def get(self,request):
+        name = request.GET.get('name','null')
+        content = request.GET.get('content','null')
+
+        parms = request.GET.get('parms','null')
+        price = request.GET.get('price','null')
+        cate_id = request.GET.get('cate_id','null')
+
+        print(name,content,parms,price,cate_id)
+        Goods.objects.filter(name=name).update(desc=content,parms=parms,price=price,cate_id=cate_id)
+        res = {}
+        res['code'] = 200
+        res['message'] = '修改成功'
+        return Response(res)
+
+
 
 #获取商品标签
 class GetTags(View):
@@ -76,16 +112,17 @@ class GetTags(View):
         table = db.mytag
         #查询数据
         res=table.find_one({"gid":str(id)})
-        return HttpResponse(json.dumps(res,ensure_ascii=False))
+        return HttpResponse(bjson.dumps(res,ensure_ascii=False))
 
 
 class InsertTags(APIView):
-    def get(self,request):
-        id = request.GET.get('id', None)
-        tags = request.GET.get('tags', None)
+    def post(self,request):
+        id = request.POST.get('id', None)
+        tags = request.POST.get('tags', None)
+        print(1111111,id,tags)
+
         tag=tags.split(",")
-        r.set("good_id",id)
-        r.set('tags',str(tag))
+
         #建立数据库对象
         db=client.md
         #建立表对象
@@ -110,19 +147,10 @@ class InsertGoods(APIView):
         price = request.POST.get('price','null')
         cate_id = request.POST.get('cate_id','null')
         image = request.FILES.get('img')
-        video = request.FILES.get('video')
-        print(name, desc, price, cate_id,parms,image,video)
+
+        print(name, desc, price, cate_id,parms,image)
 
 
-        color = request.POST.get('color','null')
-        size = request.POST.get('size','null')
-        price = request.POST.get('price','null')
-        cate_id = request.POST.get('cate_id','null')
-        print(name, desc, price, cate_id, color,size)
-        parms=dict()
-        parms['color']=color
-        parms['size']=size
-        print(json.dumps(parms))
 
 
         goods=Goods.objects.filter(name=name).first()
@@ -134,34 +162,9 @@ class InsertGoods(APIView):
             return  Response(res)
         else:
 
-            goods=Goods(name=name,desc=desc,cate_id=cate_id,price=price,parms=parms,img=image,video=video)
+            goods=Goods(name=name,desc=desc,cate_id=cate_id,price=price,parms=parms,img=image)
             goods.save()
-            db = client['goods']
-            p = db['persons']
-            person = {
-<<<<<<< HEAD
 
-                 'name':name,
-                  'desc':desc,
-	              'price':price,
-                  'parms':parms,
-	              'img':image,
-                  'video':video,
-	              'cate_id':cate_id,
-=======
-          
-                  'name':name,
-                  'desc':desc,
-	          'price':price,
-                  'parms':parms,
-	          'img':image,
-                  'video':video,
-	          'cate_id':cate_id,
->>>>>>> da254ab0831f6dcae6ea663e5861a7c51741798b
-             }
-            result = p.insert(person)
-            print(result)
-            
 
 
             
@@ -171,10 +174,12 @@ class InsertGoods(APIView):
             for i in image.chunks():
                 f.write(i)
             f.close()
+            goodsx=Goods.objects.filter(name=name).first()
             res = {}
             res['code'] = 200
             res['message'] = '添加成功'
-            r.set('parms', json.dumps(parms))
+            res['id']=goodsx.id
+
             return Response(res)
 
 # 商品列表页

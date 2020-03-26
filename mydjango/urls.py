@@ -23,7 +23,7 @@ from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
 
 from myapp.md_goods import GoodsList
 
-from myapp.md_goods import InsertGoods,GoodInfo,InsertTags,GetTags
+from myapp.md_goods import InsertGoods,GoodInfo,InsertTags,GetTags,updateGoods,Updatetags
 
 from myapp.kaoshi02 import Qiniukaoshi,Updateuser,Userinfokaoshi,Movieinfo
 
@@ -53,6 +53,8 @@ urlpatterns = [
     path('goodinfo/',GoodInfo.as_view()),
     path('inserttags/',InsertTags.as_view()),
     path('gettags/',GetTags.as_view()),
+    path('upgoods/',updateGoods.as_view()),
+    path('uptags/',Updatetags.as_view()),
 
     path('goodslist/',GoodsList.as_view()),
 

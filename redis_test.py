@@ -7,13 +7,21 @@ port = 6379
 #建立redis连接
 r = redis.Redis(host=host,port=port)
 
-#声明一个值
-r.set('test','123')
+# #声明一个值
+# r.set('test','123')
+#
+# #取值
+# code = r.get('test')
+#
+# #转码
+# code = code.decode('utf-8')
+#
+# print(code)
 
-#取值
-code = r.get('test')
 
-#转码
-code = code.decode('utf-8')
 
-print(code)
+r.sadd('testtets','爆款')
+r.sadd('testtets','修身')
+#查询
+myset=r.smembers('testtets')
+print(myset)
