@@ -23,9 +23,10 @@ from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
 
 from myapp.md_goods import GoodsList
 
-from myapp.md_goods import InsertGoods,GoodInfo,InsertTags,GetTags,updateGoods,Updatetags
+from myapp.md_goods import InsertGoods,GoodInfo,InsertTags,GetTags,updateGoods,Updatetags,Getonline
 
 from myapp.kaoshi02 import Qiniukaoshi,Updateuser,Userinfokaoshi,Movieinfo
+from myapp.Kaoshi_good import KaoshiInsertGoods,KaoshiInsertTags,KaoshiGoodsList
 
 urlpatterns = [
     #定义超链接路由
@@ -55,6 +56,7 @@ urlpatterns = [
     path('gettags/',GetTags.as_view()),
     path('upgoods/',updateGoods.as_view()),
     path('uptags/',Updatetags.as_view()),
+    path('getoline/',Getonline.as_view()),
 
     path('goodslist/',GoodsList.as_view()),
 
@@ -62,6 +64,9 @@ urlpatterns = [
     path('kstoken/',Qiniukaoshi.as_view()),
     path('ksuserinfo/',Userinfokaoshi.as_view()),
     path('ksup/',Movieinfo.as_view()),
+    path('ksaddgoods/',KaoshiInsertGoods.as_view()),
+    path('ksaddtags/',KaoshiInsertTags.as_view()),
+    path('ksgoodlist/',KaoshiGoodsList.as_view()),
 
 
 

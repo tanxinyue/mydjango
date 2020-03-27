@@ -47,4 +47,15 @@ class Goods(Base):
 
 
 
+class KaoshiGoods(Base):
+    name=models.CharField(max_length=200)
+    desc=models.CharField(max_length=200)
+    parms=models.CharField(max_length=500)
+    img=models.CharField(max_length=200,null=True)
+
+    price=models.IntegerField()
+    flow=models.IntegerField(default=0,null=True)
+    cate_id=models.IntegerField()
+    class Meta:
+        db_table='kaoshigood'
 

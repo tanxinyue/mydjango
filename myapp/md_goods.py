@@ -60,6 +60,27 @@ host='127.0.0.1'
 port=6379
 
 #简历redis对象
+#统计在线人数
+class Getonline(APIView):
+    def get(self,request):
+        # 获取客户ip
+        if 'HTTP_x_FORWARDED_FOR' in request.META:
+            ip=request.META.get('HTTP_x_FORWARDED_FOR')
+        else:
+            ip=request.META.get('REMOTE_ADDR')
+
+        #对用户ip进行存储
+        r.sadd('online',ip)
+        #设置超时时间,超时单位秒
+        r.expire('online',20)
+        #获取在线人数的数量
+        olinenum=r.smembers('online')
+        return Response({'allnum':len(olinenum)})
+
+
+
+
+
 
 r=redis.Redis(host=host,port=port)
 from mydjango.settings import UPLOAD_ROOT
@@ -87,14 +108,15 @@ class Updatetags(APIView):
 class updateGoods(APIView):
     def get(self,request):
         name = request.GET.get('name','null')
-        content = request.GET.get('content','null')
+        # content = request.GET.get('content','null')
 
         parms = request.GET.get('parms','null')
         price = request.GET.get('price','null')
         cate_id = request.GET.get('cate_id','null')
+        id=request.GET.get('id','null')
 
-        print(name,content,parms,price,cate_id)
-        Goods.objects.filter(name=name).update(desc=content,parms=parms,price=price,cate_id=cate_id)
+        print(name,parms,price,id)
+        Goods.objects.filter(id=id).update(name=name,parms=parms,price=price,cate_id=cate_id)
         res = {}
         res['code'] = 200
         res['message'] = '修改成功'
@@ -149,10 +171,6 @@ class InsertGoods(APIView):
         image = request.FILES.get('img')
 
         print(name, desc, price, cate_id,parms,image)
-
-
-
-
         goods=Goods.objects.filter(name=name).first()
 
         if goods:
@@ -164,12 +182,6 @@ class InsertGoods(APIView):
 
             goods=Goods(name=name,desc=desc,cate_id=cate_id,price=price,parms=parms,img=image)
             goods.save()
-
-
-
-            
-
-           
             f = open(os.path.join(settings.UPLOAD_ROOT, image.name), 'wb')
             for i in image.chunks():
                 f.write(i)

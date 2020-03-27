@@ -17,3 +17,7 @@ class GoodsSerializer(serializers.ModelSerializer):
         model=Goods
         fields = "__all__"
 
+class KsGoodsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=KaoshiGoods
+        fields = "__all__"

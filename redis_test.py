@@ -18,10 +18,16 @@ r = redis.Redis(host=host,port=port)
 #
 # print(code)
 
+#
+#
+# r.sadd('testtets','爆款')
+# r.sadd('testtets','修身')
+# #查询
+# myset=r.smembers('testtets')
+# print(myset)
 
 
-r.sadd('testtets','爆款')
-r.sadd('testtets','修身')
-#查询
-myset=r.smembers('testtets')
-print(myset)
+# list的使用
+r.lpush('testlist','1')
+mylist=r.lrange('testlist',0,r.llen('testlist'))
+print(mylist)
