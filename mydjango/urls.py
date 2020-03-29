@@ -21,7 +21,7 @@ from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_dele
 from myapp.md_user import UploadFile,Update,Qiniu,Updateuser,Userinfo
 from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
 
-from myapp.md_goods import GoodsList
+from myapp.md_goods import GoodsList,Shoponline
 
 from myapp.md_goods import InsertGoods,GoodInfo,InsertTags,GetTags,updateGoods,Updatetags,Getonline
 
@@ -57,6 +57,7 @@ urlpatterns = [
     path('upgoods/',updateGoods.as_view()),
     path('uptags/',Updatetags.as_view()),
     path('getoline/',Getonline.as_view()),
+    path('shopoline/',Shoponline.as_view()),
 
     path('goodslist/',GoodsList.as_view()),
 

@@ -58,6 +58,21 @@ import redis
 #  定义ip地址和端口
 host='127.0.0.1'
 port=6379
+class Shoponline(APIView):
+    def get(self,request):
+        # 获取客户ip
+        if 'HTTP_x_FORWARDED_FOR' in request.META:
+            ip=request.META.get('HTTP_x_FORWARDED_FOR')
+        else:
+            ip=request.META.get('REMOTE_ADDR')
+
+        #对用户ip进行存储
+        r.sadd('shoponline',ip)
+        #设置超时时间,超时单位秒
+        r.expire('shoponline',60)
+        #获取在线人数的数量
+        olinenum=r.smembers('shoponline')
+        return Response({'allnum':len(olinenum)})
 
 #简历redis对象
 #统计在线人数
