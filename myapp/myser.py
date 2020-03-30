@@ -21,3 +21,9 @@ class KsGoodsSerializer(serializers.ModelSerializer):
     class Meta:
         model=KaoshiGoods
         fields = "__all__"
+
+# 评论类的数列器
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Comment
+        fields = "__all__"

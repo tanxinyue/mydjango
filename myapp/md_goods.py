@@ -47,7 +47,7 @@ from mydjango.settings import BASE_DIR
 
 #导包
 from django.db.models import Q,F
-
+import datetime
 #导入dwebsocket的库
 from dwebsocket.decorators import accept_websocket
 import uuid
@@ -58,6 +58,50 @@ import redis
 #  定义ip地址和端口
 host='127.0.0.1'
 port=6379
+#评论展示
+class Showcomment(APIView):
+    def get(self,request):
+        #获取商品id
+        id=request.GET.get('id',None)
+        #查询评论
+        comment=Comment.objects.filter(gid=int(id)).order_by('-id')
+        #序列化
+        comment_ser=CommentSerializer(comment,many=True)
+        return Response(comment_ser.data)
+
+
+
+
+import copy
+#反序列化入库
+#商品评论
+from myapp.myser import CommentSerializer
+class InsertComment(APIView):
+    def post(self,request):
+        #mongo存储
+        params = copy.deepcopy(request.data)
+        # 建立数据库对象
+        db = client.md
+        # 建立表对象
+        table = db.content
+    
+
+
+        table.insert({"gid":params['gid'] , "content":params['content'],'uid':params['uid']})
+
+
+
+        #初始化参数
+        comment=CommentSerializer(data=request.data)
+
+        #数据校验
+        if comment.is_valid():
+            #数据入库
+            comment.save()
+        return Response({'code':200,'message':'入库成功'})
+
+
+
 class Shoponline(APIView):
     def get(self,request):
         # 获取客户ip

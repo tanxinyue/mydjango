@@ -59,3 +59,9 @@ class KaoshiGoods(Base):
     class Meta:
         db_table='kaoshigood'
 
+class Comment(Base):
+    content=models.CharField(max_length=200)
+    uid=models.IntegerField()
+    gid=models.IntegerField()
+    class Meta:
+        db_table='comment'
