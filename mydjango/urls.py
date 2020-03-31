@@ -24,7 +24,7 @@ from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
 from myapp.md_goods import GoodsList,Shoponline
 
 from myapp.md_goods import InsertGoods,GoodInfo,InsertTags,GetTags,updateGoods,Updatetags,Getonline
-from myapp.md_goods import InsertComment,Showcomment
+from myapp.md_goods import InsertComment,Showcomment,UserList,CommentsList
 from myapp.kaoshi02 import Qiniukaoshi,Updateuser,Userinfokaoshi,Movieinfo
 from myapp.Kaoshi_good import KaoshiInsertGoods,KaoshiInsertTags,KaoshiGoodsList
 
@@ -62,6 +62,8 @@ urlpatterns = [
     path('showcomment/',Showcomment.as_view()),
 
     path('goodslist/',GoodsList.as_view()),
+    path('userlist/',UserList.as_view()),
+    path('pagelist/',CommentsList.as_view()),
 
 
     path('kstoken/',Qiniukaoshi.as_view()),

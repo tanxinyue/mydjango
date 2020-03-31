@@ -58,6 +58,39 @@ import redis
 #  定义ip地址和端口
 host='127.0.0.1'
 port=6379
+from myapp.myser import UserSerializer
+
+class CommentsList(APIView):
+    def get(self,request):
+        #当前页
+        page=int(request.GET.get('page',1))
+        # 一页有多少条商品
+        size=int(request.GET.get('size',1))
+        id=int(request.GET.get('id',1))
+
+        #定义从哪开始切换
+        data_start=(page-1)*size
+        # 定义切到哪里
+        data_end=page*size
+        #查询数据
+        commentslist=Comment.objects.filter(gid=id).all()[data_start:data_end]
+        #查询总数量
+        count=Comment.objects.filter(gid=id).count()
+        #序列化操作
+        goods_ser=CommentSerializer(commentslist,many=True)
+        # 返回数据
+        res={}
+        res['total']=count
+        res['data']=goods_ser.data
+        return Response(res)
+
+class UserList(APIView):
+    def get(self,request):
+        #查询
+        user=User.objects.filter()
+        user_ser=UserSerializer(user,many=True)
+        return Response(user_ser.data)
+
 #评论展示
 class Showcomment(APIView):
     def get(self,request):
