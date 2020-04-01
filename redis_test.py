@@ -28,6 +28,9 @@ r = redis.Redis(host=host,port=port)
 
 
 # list的使用
-r.lpush('testlist','1')
-mylist=r.lrange('testlist',0,r.llen('testlist'))
-print(mylist)
+# r.lpush('testlist','1')
+# mylist=r.lrange('testlist',0,r.llen('testlist'))
+# print(mylist)
+# r.set('123','123')
+# r.expire('123',10)
+print(r.get('123'))

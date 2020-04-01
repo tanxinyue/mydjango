@@ -65,3 +65,12 @@ class Comment(Base):
     gid=models.IntegerField()
     class Meta:
         db_table='comment'
+
+#关注表
+class UserFlow(Base):
+    #谁关注的
+    uid=models.IntegerField()
+    #关注的那个商品
+    gid=models.IntegerField()
+    class Meta:
+        db_table='userflow'

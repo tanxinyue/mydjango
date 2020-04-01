@@ -59,6 +59,81 @@ import redis
 host='127.0.0.1'
 port=6379
 from myapp.myser import UserSerializer
+#结果集进行美化
+
+def dictchangeflow(cursor):
+    #获取游标描述
+    desc=cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+
+        for row in cursor.fetchall()
+
+    ]
+
+
+#展示该商品关注的人数和用户名
+class UsershowFlow(View):
+    def get(self,request):
+        gid=request.GET.get('gid',None)
+
+        #建立游标对象
+        cursor=connection.cursor()
+        #执行Sql语句
+        cursor.execute('select a.username from user a left join userflow b on a.id=b.uid where b.gid=%s'%str(gid))
+        result=dictchangeflow(cursor)
+        #返回结果，手动序列化
+        return HttpResponse(json.dumps(result,ensure_ascii=False),content_type='application/json')
+
+
+
+
+#进行商品收藏
+class Goodflow(APIView):
+    def get(self, request):
+        gid = request.GET.get('gid', None)
+        uid = request.GET.get('uid', None)
+        result=UserFlow.objects.filter(gid=gid,uid=uid).first()
+        if result:
+            res = {}
+            res['code'] = 403
+            res['message'] = '该商品已经在收藏列表中'
+            return Response(res)
+        else:
+            UserFlow.objects.create(uid=uid,gid=gid)
+            res = {}
+            res['code'] = 200
+            res['message'] = '收藏成功'
+            return Response(res)
+
+
+#结果集进行美化
+
+def dictchange(cursor):
+    #获取游标描述
+    desc=cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+
+        for row in cursor.fetchall()
+
+    ]
+
+
+#商品关注接口(查询用户关注过的商品列表)
+class UidFlow(View):
+    def get(self,request):
+        uid=request.GET.get('uid',None)
+
+        #建立游标对象
+        cursor=connection.cursor()
+        #执行Sql语句
+        cursor.execute('select a.name from goods a left join userflow b on a.id=b.gid where b.uid=%s'%str(uid))
+        result=dictchange(cursor)
+
+        #返回结果，手动序列化
+        return HttpResponse(json.dumps(result,ensure_ascii=False),content_type='application/json')
+
 
 class CommentsList(APIView):
     def get(self,request):
@@ -126,11 +201,16 @@ class InsertComment(APIView):
 
         #初始化参数
         comment=CommentSerializer(data=request.data)
+        if r.get('uid'):
+            return Response({'code': 403, 'message': '操作太频繁!'})
 
         #数据校验
         if comment.is_valid():
             #数据入库
             comment.save()
+            r.set('uid',params['uid'])
+            r.expire('uid',30)
+
         return Response({'code':200,'message':'入库成功'})
 
 
