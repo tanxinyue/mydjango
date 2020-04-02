@@ -33,4 +33,7 @@ r = redis.Redis(host=host,port=port)
 # print(mylist)
 # r.set('123','123')
 # r.expire('123',10)
-print(r.get('123'))
+#
+r.zadd('myrank',{'car':100})
+r.zadd('myrank',{'gid':30})
+print(r.zrange('myrank',0,-1,desc=True,withscores=True))

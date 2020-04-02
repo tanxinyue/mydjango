@@ -21,10 +21,10 @@ from myapp.views import myindex,Myview,Adduser,search_post,list_modify,list_dele
 from myapp.md_user import UploadFile,Update,Qiniu,Updateuser,Userinfo
 from myapp.md_pics import InsertPics,Showpics,DeletePics,UpdatePics
 
-from myapp.md_goods import GoodsList,Shoponline,UidFlow,Goodflow,UsershowFlow
+from myapp.md_goods import GoodsList,Shoponline,UidFlow,Goodflow,UsershowFlow,CancelFlow
 
 from myapp.md_goods import InsertGoods,GoodInfo,InsertTags,GetTags,updateGoods,Updatetags,Getonline
-from myapp.md_goods import InsertComment,Showcomment,UserList,CommentsList
+from myapp.md_goods import InsertComment,Showcomment,UserList,CommentsList,Rediscount
 from myapp.kaoshi02 import Qiniukaoshi,Updateuser,Userinfokaoshi,Movieinfo
 from myapp.Kaoshi_good import KaoshiInsertGoods,KaoshiInsertTags,KaoshiGoodsList
 
@@ -63,6 +63,8 @@ urlpatterns = [
     path('uidflow/',UidFlow.as_view()),
     path('goodflow/',Goodflow.as_view()),
     path('peopleflow/',UsershowFlow.as_view()),
+    path('disflow/',CancelFlow.as_view()),
+    path('redisflow/',Rediscount.as_view()),
 
     path('goodslist/',GoodsList.as_view()),
     path('userlist/',UserList.as_view()),

@@ -60,6 +60,20 @@ host='127.0.0.1'
 port=6379
 from myapp.myser import UserSerializer
 #结果集进行美化
+class Rediscount(APIView):
+    def get(self,request):
+        gid=request.GET.get('gid',None)
+        count=request.GET.get('count',None)
+        r.zadd('myrank', {'gid':gid,count:count})
+        res = {}
+        res['code'] = 200
+        res['message'] = '商品关注数和id已存到redis中'
+        return Response(res)
+
+
+
+
+
 
 def dictchangeflow(cursor):
     #获取游标描述
@@ -83,7 +97,25 @@ class UsershowFlow(View):
         cursor.execute('select a.username from user a left join userflow b on a.id=b.uid where b.gid=%s'%str(gid))
         result=dictchangeflow(cursor)
         #返回结果，手动序列化
-        return HttpResponse(json.dumps(result,ensure_ascii=False),content_type='application/json')
+        return HttpResponse(json.dumps(result,ensure_ascii=False,indent=4),content_type='application/json')
+
+class CancelFlow(APIView):
+    def get(self, request):
+        gid = request.GET.get('gid', None)
+        uid = request.GET.get('uid', None)
+        result=UserFlow.objects.filter(gid=gid, uid=uid).first()
+        if result:
+            UserFlow.objects.filter(gid=gid, uid=uid).delete()
+            res = {}
+            res['code'] = 200
+            res['message'] = '取消收藏成功'
+            return Response(res)
+        else:
+            res = {}
+            res['code'] = 403
+            res['message'] = '您还未收藏该商品'
+            return Response(res)
+
 
 
 
@@ -132,7 +164,7 @@ class UidFlow(View):
         result=dictchange(cursor)
 
         #返回结果，手动序列化
-        return HttpResponse(json.dumps(result,ensure_ascii=False),content_type='application/json')
+        return HttpResponse(json.dumps(result,ensure_ascii=False,indent=4,default=str),content_type='application/json')
 
 
 class CommentsList(APIView):
