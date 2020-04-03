@@ -98,7 +98,20 @@ class UsershowFlow(View):
         result=dictchangeflow(cursor)
         #返回结果，手动序列化
         return HttpResponse(json.dumps(result,ensure_ascii=False,indent=4),content_type='application/json')
+    #批量商品取消关注
+class AllCancelFlow(APIView):
+    def get(self, request):
+        ids = request.GET.get('ids', None)
+        uid = request.GET.get('uid', None)
+        id_list=eval(ids)
+        for id in id_list:
+            UserFlow.objects.filter(gid=id, uid=uid).delete()
+        res = {}
+        res['code'] = 200
+        res['message'] = '批量取消收藏成功'
+        return Response(res)
 
+#某个商品取消关注
 class CancelFlow(APIView):
     def get(self, request):
         gid = request.GET.get('gid', None)
@@ -140,7 +153,6 @@ class Goodflow(APIView):
 
 
 #结果集进行美化
-
 def dictchange(cursor):
     #获取游标描述
     desc=cursor.description
@@ -152,15 +164,15 @@ def dictchange(cursor):
     ]
 
 
+
 #商品关注接口(查询用户关注过的商品列表)
 class UidFlow(View):
     def get(self,request):
         uid=request.GET.get('uid',None)
-
         #建立游标对象
         cursor=connection.cursor()
         #执行Sql语句
-        cursor.execute('select a.name from goods a left join userflow b on a.id=b.gid where b.uid=%s'%str(uid))
+        cursor.execute('select a.id,a.name from goods a left join userflow b on a.id=b.gid where b.uid=%s'%str(uid))
         result=dictchange(cursor)
 
         #返回结果，手动序列化

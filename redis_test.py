@@ -32,8 +32,13 @@ r = redis.Redis(host=host,port=port)
 # mylist=r.lrange('testlist',0,r.llen('testlist'))
 # print(mylist)
 # r.set('123','123')
-# r.expire('123',10)
+# r.expire('123',86400)
 #
 r.zadd('myrank',{'car':100})
 r.zadd('myrank',{'gid':30})
-print(r.zrange('myrank',0,-1,desc=True,withscores=True))
+#修改操作
+newscore=r.zincrby('myrank',300,'car')
+# print(newscore)
+
+
+# print(r.zrange('myrank',0,-1,desc=True,withscores=True))

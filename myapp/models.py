@@ -74,3 +74,15 @@ class UserFlow(Base):
     gid=models.IntegerField()
     class Meta:
         db_table='userflow'
+
+#以下为考试建表
+
+class KaoshiUser(Base):
+    username=models.CharField(max_length=60,verbose_name='用户名')
+    password=models.CharField(max_length=120,verbose_name='密码')
+    # 头像
+    img = models.CharField(max_length=200)
+    # 类别  0普通用户 1超级管理员
+    type = models.IntegerField(default=0, null=True)
+    class Meta:
+        db_table='user'
