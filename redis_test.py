@@ -23,7 +23,7 @@ r = redis.Redis(host=host,port=port)
 # r.sadd('testtets','爆款')
 # r.sadd('testtets','修身')
 # #查询
-# myset=r.smembers('testtets')
+# myset=r.smembers('')
 # print(myset)
 
 

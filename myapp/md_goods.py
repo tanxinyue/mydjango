@@ -59,12 +59,79 @@ import redis
 host='127.0.0.1'
 port=6379
 from myapp.myser import UserSerializer
+#商品检索接口
+class GoodsSearch(APIView):
+    def get(self,request):
+        #接受参数
+        word=request.GET.get('word',None)
+        print(word)
+        #检索模拟
+
+        goodslist=Goods.objects.filter(name__contains=word)
+        print(goodslist)
+        goods_ser = GoodsSerializer(goodslist, many=True)
+
+        #序列化
+
+        return Response(goods_ser.data)
+
+
+#获取前n名的数据
+def get_top_n(num):
+    #获取redis中的数据
+    good_range=r.zrange('good_rank',0,-1,desc=True,withscores=True)[:num]
+    #获取mysql中的数据
+    goods=Goods.objects.in_bulk([int(item[0])  for item in good_range])
+    #合并操作
+    res=[]
+    for item in good_range:
+        try:
+            #遍历列表
+            res.append({int(item[1]):goods[int(item[0])]})
+        except Exception as e:
+            pass
+    print(res)
+    return res
+
+#商品排行榜数据视图
+class GoodRank(APIView):
+    def get(self,request):
+        #获取前n的数据
+        get_result=get_top_n(10)
+        res=[]
+        #遍历进行序列化
+        for dic in get_result:
+          for k,v in dic.items():
+              data=GoodsSerializer(v).data
+              #将商品点击数附加到商品数列化数中
+              data['clicks']=k
+              res.append(data)
+
+
+
+        return Response(res)
+
+
+
+
+#新的商品参与排名
+class Goodsrange(APIView):
+    def get(self,request):
+        #接受参数
+        id = request.GET.get('id', None)
+        #修改商品的点击数
+        r.zincrby('good_rank',1,int(id))
+        return Response({'message':'访问加1'})
+
+
+
+
 #结果集进行美化
 class Rediscount(APIView):
     def get(self,request):
         gid=request.GET.get('gid',None)
         count=request.GET.get('count',None)
-        r.zadd('myrank', {'gid':gid,count:count})
+        r.zadd('myrank', {'gid':gid,'count':count})
         res = {}
         res['code'] = 200
         res['message'] = '商品关注数和id已存到redis中'

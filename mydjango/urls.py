@@ -28,6 +28,7 @@ from myapp.md_goods import InsertComment,Showcomment,UserList,CommentsList,Redis
 from myapp.kaoshi02 import Qiniukaoshi,Updateuser,Userinfokaoshi,Movieinfo
 from myapp.Kaoshi_good import KaoshiInsertGoods,KaoshiInsertTags,KaoshiGoodsList
 from myapp.kaoshi0403 import  kaoshiCancelFlow,kaoshiGoodflow
+from myapp.md_goods import Goodsrange,GoodRank,GoodsSearch
 urlpatterns = [
     #定义超链接路由
     re_path('^static/upload/(?P<path>.*)$',serve,{'document_root':'/static/upload/'}),
@@ -68,6 +69,9 @@ urlpatterns = [
     path('redisflow/',Rediscount.as_view()),
     path('ksflow/',kaoshiGoodflow.as_view()),
     path('cancelflow/',kaoshiCancelFlow.as_view()),
+    path('goodclick/',Goodsrange.as_view()),
+    path('goodrank/',GoodRank.as_view()),
+    path('search/',GoodsSearch.as_view()),
 
     path('goodslist/',GoodsList.as_view()),
     path('userlist/',UserList.as_view()),
