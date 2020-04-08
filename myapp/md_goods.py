@@ -66,8 +66,8 @@ class GoodsSearch(APIView):
         word=request.GET.get('word',None)
         print(word)
         #检索模拟
-
-        goodslist=Goods.objects.filter(name__contains=word)
+        #翻译sql select * from goods where name like '%word%' or desc like '%word% and (parms like '%word%') '
+        goodslist=Goods.objects.filter(Q(name__icontains=word) | Q(desc__icontains=word))
         print(goodslist)
         goods_ser = GoodsSerializer(goodslist, many=True)
 
